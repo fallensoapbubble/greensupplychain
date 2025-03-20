@@ -1,42 +1,197 @@
-/* Main container styling */
+/* MainPage.css - Enhanced Nature Theme */
+body {
+  margin: 0;
+  font-family: "Quicksand", "Arial", sans-serif;
+  background-image: url('https://cloudfret.com/blog/wp-content/uploads/2024/02/cloudfret-green-1.png');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  color: #3a4b39;
+  height: 100vh;
+  overflow-x: hidden;
+}
+
 .main-container {
-    display: flex;
-    flex-wrap: wrap; /* Allows the cards to wrap to the next line on smaller screens */
-    gap: 5rem;
-    padding: 20 rem;
-    justify-content: center; /* Center align cards horizontally */
-    align-items: stretch; /* Ensure all cards stretch evenly */
-    background-color: #d7460d; /* Light background color for contrast */
+  min-height: 100vh;
+  backdrop-filter: blur(5px);
+  padding: 40px 20px;
+  background-color: rgba(245, 249, 240, 0.2);
+}
+
+/* Hero Section */
+.hero-section {
+  text-align: center;
+  margin-bottom: 60px;
+  padding: 40px 20px;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.welcome-title {
+  font-family: "Playfair Display", serif !important;
+  color: #3a4b39 !important;
+  font-weight: 600 !important;
+  margin-bottom: 16px !important;
+  position: relative;
+  display: inline-block;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-title::after {
+  content: "";
+  position: absolute;
+  width: 80px;
+  height: 3px;
+  background-color: rgba(125, 156, 116, 0.7);
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.welcome-subtitle {
+  color: #506b41 !important;
+  font-weight: 400 !important;
+  margin-top: 20px !important;
+  opacity: 0.9;
+}
+
+/* Card Container */
+.card-container {
+  margin-top: 40px !important;
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 16px;
+  padding: 30px 24px;
+  height: 270px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s ease;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  border-bottom: 4px solid var(--card-accent-color, #7d9c74);
+}
+
+.dashboard-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: var(--card-accent-color, #7d9c74);
+  opacity: 0.7;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(var(--card-accent-color, #7d9c74), 0.2);
+  background-color: rgba(255, 255, 255, 0.85);
+}
+
+.dashboard-card:hover .card-icon-wrapper {
+  transform: scale(1.1) translateY(-5px);
+  background-color: var(--card-accent-color, #7d9c74);
+}
+
+.card-icon-wrapper {
+  background-color: rgba(var(--card-accent-color, #7d9c74), 0.15);
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.section-icon {
+  color: var(--card-accent-color, #7d9c74) !important;
+  transition: all 0.3s ease;
+}
+
+.dashboard-card:hover .section-icon {
+  color: white !important;
+}
+
+.card-title {
+  font-family: "Playfair Display", serif !important;
+  color: #3a4b39 !important;
+  font-weight: 600 !important;
+  margin-bottom: 10px !important;
+  text-align: center;
+}
+
+.card-description {
+  color: #506b41 !important;
+  text-align: center;
+  margin-bottom: 25px !important;
+  font-size: 0.95rem !important;
+}
+
+.card-button {
+  background-color: var(--button-bg-color, #7d9c74) !important;
+  color: white !important;
+  border-radius: 30px !important;
+  padding: 8px 24px !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+  font-size: 0.95rem !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+  background-color: var(--button-bg-color, #7d9c74) !important;
+}
+
+.card-button::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: -100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: 0.5s;
+}
+
+.card-button:hover::after {
+  left: 100%;
+}
+
+/* Font imports - uncomment if you want to use these fonts */
+/* @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600&display=swap'); */
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .hero-section {
+    padding: 30px 15px;
+    margin-bottom: 30px;
   }
   
-  /* Card styling */
-  .custom-card {
-    width: 300px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover effects */
+  .welcome-title {
+    font-size: 1.8rem !important;
   }
   
-  .custom-card:hover {
-    transform: translateY(-5px); /* Move the card upward on hover */
-    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
-    border: 1px solid #3f51b5; /* Add a border with primary color */
+  .dashboard-card {
+    height: auto;
+    padding: 25px 20px;
   }
-  
-  /* Card title styling */
-  .card-title {
-    color: #3f51b5; /* Primary color */
-    font-weight: bold;
-  }
-  
-  /* Button styling */
-  .card-button {
-    margin-top: 15px;
-    background-color: #3f51b5; /* Consistent primary color */
-    color: #ffffff;
-    font-weight: bold;
-  }
-  
-  .card-button:hover {
-    background-color: #2c3e9f; /* Slightly darker on hover */
-  }
-  
+}
