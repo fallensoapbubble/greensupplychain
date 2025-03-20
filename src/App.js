@@ -1,14 +1,18 @@
 // import logo from './logo.svg';
 // import './App.css';
 
-import Analytics from "./pages/Analytics/Analytics";
+import React from "react";
+import MainPage from "./pages/MainPage";
+
 
 function App() {
   return (
     <>
      
-    <Analytics />
-    
+    <MainPage />
+
+
+
     </>
   );
 }
