@@ -1,60 +1,57 @@
-
 import { Card, CardContent, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import React from "react";
-import Analytics from "./Analytics/Analytics";
-import Dashboard from "./Dashboard/Dashboard";
-
-
+import "./MainPage.css"; 
 
 function MainPage() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const navigateTo = (path) => navigate(path);
 
-  const navigateTo = (path) => {
-    navigate(path);
-  };
-  
-    return (
-      <div style={{ display: "flex", gap: "20px", padding: "20px" }}>
-        <Card style={{ width: "300px" }}>
+  const cards = [
+    {
+      title: "Analytics",
+      description: "View detailed analytics and insights.",
+      path: "/analytics",
+    },
+    {
+      title: "Dashboard",
+      description: "Access your dashboard and manage data.",
+      path: "/dashboard",
+    },
+    {
+      title: "Inventory",
+      description: "Access your Inventory.",
+      path: "/inventory",
+    },
+    {
+        title: "Optimize Routes",
+        description: "Greener Routes Right now!",
+        path: "/routemanager",
+      }
+  ];
+
+  return (
+    <div style={{ display: "flex", gap: "20px", padding: "20px" }}>
+      {cards.map((card, index) => (
+        <Card key={index} style={{ width: "300px" }}>
           <CardContent>
-            <Typography variant="h5" component="div">
-              Analytics
-            </Typography>
+            <Typography variant="h5">{card.title}</Typography>
             <Typography variant="body2" color="text.secondary">
-              View detailed analytics and insights.
+              {card.description}
             </Typography>
             <Button
               variant="contained"
               color="primary"
               style={{ marginTop: "10px" }}
-              onClick={() => navigateTo("/analytics")}
+              onClick={() => navigateTo(card.path)}
             >
-              Go to Analytics
+              Go to {card.title}
             </Button>
           </CardContent>
         </Card>
-  
-        <Card style={{ width: "300px" }}>
-          <CardContent>
-            <Typography variant="h5" component="div">
-              Dashboard
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Access your dashboard and manage data.
-            </Typography>
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ marginTop: "10px" }}
-              onClick={() => navigateTo("/dashboard")}
-            >
-              Go to Dashboard
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-  
-  export default MainPage;
+      ))}
+    </div>
+  );
+}
+
+export default MainPage;
