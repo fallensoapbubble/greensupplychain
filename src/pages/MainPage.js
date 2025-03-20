@@ -9,10 +9,10 @@ import Dashboard from "./Dashboard/Dashboard";
 
 function MainPage() {
     const navigate = useNavigate();
-  
-    const navigateTo = (path) => {
-      navigate(path);
-    };
+
+  const navigateTo = (path) => {
+    navigate(path);
+  };
   
     return (
       <div style={{ display: "flex", gap: "20px", padding: "20px" }}>
@@ -28,7 +28,7 @@ function MainPage() {
               variant="contained"
               color="primary"
               style={{ marginTop: "10px" }}
-              onClick={() => navigateTo(<Analytics)}
+              onClick={() => navigateTo("/analytics")}
             >
               Go to Analytics
             </Button>
@@ -47,7 +47,7 @@ function MainPage() {
               variant="contained"
               color="primary"
               style={{ marginTop: "10px" }}
-              onClick={() => navigateTo(<Dashboard/>)}
+              onClick={() => navigateTo("/dashboard")}
             >
               Go to Dashboard
             </Button>

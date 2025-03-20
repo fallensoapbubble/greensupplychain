@@ -3,7 +3,7 @@ import './EmissionsTracker.css';
 
 
 
-const GHGCalculator = () => {
+const EmissionsTracker = () => {
     const [vehicleType, setVehicleType] = useState("");
     const [distance, setDistance] = useState("");
     const [cargoWeight, setCargoWeight] = useState("");
@@ -144,4 +144,4 @@ const GHGCalculator = () => {
     );
 };
 
-export default GHGCalculator;
+export default EmissionsTracker;
