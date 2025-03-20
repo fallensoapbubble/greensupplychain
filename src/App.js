@@ -1,11 +1,14 @@
 // import logo from './logo.svg';
 // import './App.css';
 
+import Analytics from "./pages/Analytics/Analytics";
+
 function App() {
   return (
     <>
-    <h1>Hello veda and sarvesh</h1>
-
+     
+    <Analytics />
+    
     </>
   );
 }
