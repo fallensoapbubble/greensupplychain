@@ -25,9 +25,11 @@ const Chatbot = () => {
         const userMessage = query;
         setChatHistory(prev => [...prev, { type: 'user', content: userMessage }]);
         setQuery('');
-
+        
+        // http://flaskgsp-production.up.railway.app/
+        // http://127.0.0.1:5000/chat
         try {
-            const res = await axios.post('http://127.0.0.1:5000/chat', { query: userMessage });
+            const res = await axios.post('https://flaskback-production.up.railway.app/chat', { query: userMessage });
             const botResponse = res.data.response || 'No response from server';
             setResponse(botResponse);
             
