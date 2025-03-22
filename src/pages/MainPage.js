@@ -40,6 +40,13 @@ function MainPage() {
       icon: <RouteIcon fontSize="large" className="section-icon" />,
       color: "#94b08c"
     },
+    {
+      title: "Chat with me",
+      description: "I will help",
+      path: "/chatbotz",
+      icon: <RouteIcon fontSize="large" className="section-icon" />,
+      color: "#84508c"
+    },
   ];
 
   return (

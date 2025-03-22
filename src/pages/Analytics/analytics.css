@@ -1,0 +1,389 @@
+/* analytics-styles.css */
+
+/* Base styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    color: #333;
+    line-height: 1.5;
+    background-color: #f9fafb;
+  }
+  
+  /* Container styles with glassmorphism */
+  .analytics-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    background: linear-gradient(135deg, rgba(240, 249, 240, 0.7), rgba(230, 241, 249, 0.7));
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+  }
+  
+  /* Header styles */
+  .analytics-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+  
+  .analytics-header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: rgba(40, 94, 59, 0.9);
+    margin-left: 16px;
+    letter-spacing: -0.5px;
+  }
+  
+  .header-icon {
+    width: 32px;
+    height: 32px;
+    color: rgba(46, 153, 99, 0.9);
+  }
+  
+  /* Tabs container */
+  .tabs-container {
+    width: 100%;
+  }
+  
+  /* Tabs navigation with glassmorphism */
+  .tabs-nav {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    margin-bottom: 32px;
+    background-color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+  
+  .tab-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(85, 85, 85, 0.8);
+    transition: all 0.3s ease;
+  }
+  
+  .tab-trigger:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    color: rgba(51, 51, 51, 0.9);
+  }
+  
+  .tab-trigger svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+  }
+  
+  .tab-trigger:hover svg {
+    opacity: 0.9;
+  }
+  
+  /* Active tab states with transparent colors */
+  .tab-trigger[data-state="active"] {
+    background-color: rgba(245, 245, 245, 0.7);
+    color: rgba(51, 51, 51, 1);
+  }
+  
+  .tab-trigger[data-state="active"][data-value="overview"] {
+    background-color: rgba(245, 245, 245, 0.7);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .tab-trigger[data-state="active"][data-value="emissions"] {
+    background-color: rgba(230, 245, 230, 0.7);
+    box-shadow: 0 2px 8px rgba(46, 153, 99, 0.1);
+  }
+  
+  .tab-trigger[data-state="active"][data-value="water"] {
+    background-color: rgba(230, 240, 255, 0.7);
+    box-shadow: 0 2px 8px rgba(41, 112, 204, 0.1);
+  }
+  
+  .tab-trigger[data-state="active"][data-value="energy"] {
+    background-color: rgba(255, 248, 230, 0.7);
+    box-shadow: 0 2px 8px rgba(214, 140, 8, 0.1);
+  }
+  
+  .tab-trigger[data-state="active"][data-value="biodiversity"] {
+    background-color: rgba(230, 249, 230, 0.7);
+    box-shadow: 0 2px 8px rgba(46, 125, 82, 0.1);
+  }
+  
+  /* Tabs content container with glassmorphism */
+  .tabs-content-container {
+    background-color: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+  }
+  
+  .tab-content {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .tab-content[data-state="active"] {
+    display: block;
+    opacity: 0.9;
+  }
+  
+  .tab-panel {
+    padding: 20px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+  
+  /* .overview-panel {
+    background-color: rgba(248, 248, 248, 0.5);
+  }
+  
+  .emissions-panel {
+    background-color: rgba(240, 249, 240, 0.5);
+  }
+  
+  .water-panel {
+    background-color: rgba(240, 247, 255, 0.5);
+  }
+  
+  .energy-panel {
+    background-color: rgba(255, 251, 240, 0.5);
+  }
+  
+  .biodiversity-panel {
+    background-color: rgba(240, 249, 240, 0.5);
+  } */
+  
+  /* Panel headers with subtle text shadows */
+  .panel-header {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    letter-spacing: -0.3px;
+  }
+  
+  .overview-panel .panel-header {
+    color: rgba(51, 51, 51, 0.9);
+  }
+  
+  .emissions-panel .panel-header {
+    color: rgba(40, 94, 59, 0.9);
+  }
+  
+  .water-panel .panel-header {
+    color: rgba(30, 78, 140, 0.9);
+  }
+  
+  .energy-panel .panel-header {
+    color: rgba(180, 121, 13, 0.9);
+  }
+  
+  .biodiversity-panel .panel-header {
+    color: rgba(40, 94, 59, 0.9);
+  }
+  
+  /* Panel content boxes with glassmorphism */
+  .panel-content {
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 28px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  
+  .panel-description {
+    margin-bottom: 24px;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  
+  .overview-panel .panel-description {
+    color: rgba(85, 85, 85, 0.9);
+  }
+  
+  .emissions-panel .panel-description {
+    color: rgba(46, 125, 82, 0.9);
+  }
+  
+  .water-panel .panel-description {
+    color: rgba(41, 112, 204, 0.9);
+  }
+  
+  .energy-panel .panel-description {
+    color: rgba(214, 140, 8, 0.9);
+  }
+  
+  .biodiversity-panel .panel-description {
+    color: rgba(46, 125, 82, 0.9);
+  }
+  
+  /* Placeholder visualization containers with subtle gradients */
+  .visualization-placeholder {
+    height: 256px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    color: rgba(85, 85, 85, 0.4);
+    border: 1px dashed rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .visualization-placeholder:hover {
+    border-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .water-panel .visualization-placeholder {
+    background: linear-gradient(135deg, rgba(230, 240, 255, 0.5), rgba(220, 235, 255, 0.5));
+  }
+  
+  .energy-panel .visualization-placeholder {
+    background: linear-gradient(135deg, rgba(255, 248, 230, 0.5), rgba(252, 240, 210, 0.5));
+  }
+  
+  .biodiversity-panel .visualization-placeholder {
+    background: linear-gradient(135deg, rgba(230, 249, 230, 0.5), rgba(220, 245, 220, 0.5));
+  }
+  
+  /* Overview dashboard grid with glass cards */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  .dashboard-card {
+    padding: 20px;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+  }
+  
+  .dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  }
+  
+  .card-carbon {
+    background: linear-gradient(135deg, rgba(230, 245, 230, 0.7), rgba(220, 240, 220, 0.7));
+  }
+  
+  .card-water {
+    background: linear-gradient(135deg, rgba(230, 240, 255, 0.7), rgba(220, 235, 255, 0.7));
+  }
+  
+  .card-energy {
+    background: linear-gradient(135deg, rgba(255, 248, 230, 0.7), rgba(252, 240, 210, 0.7));
+  }
+  
+  .card-waste {
+    background: linear-gradient(135deg, rgba(244, 230, 249, 0.7), rgba(235, 220, 245, 0.7));
+  }
+  
+  .dashboard-card h3 {
+    font-weight: 500;
+    font-size: 15px;
+    margin-bottom: 12px;
+    color: rgba(51, 51, 51, 0.4);
+  }
+  
+  .dashboard-card .metric {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: rgba(51, 51, 51, 0.9);
+  }
+  
+  .dashboard-card .trend {
+    font-size: 13px;
+    font-weight: 500;
+  }
+  
+  .card-carbon .trend {
+    color: rgba(46, 153, 99, 0.85);
+  }
+  
+  .card-water .trend {
+    color: rgba(41, 112, 204, 0.85);
+  }
+  
+  .card-energy .trend {
+    color: rgba(214, 140, 8, 0.85);
+  }
+  
+  .card-waste .trend {
+    color: rgba(147, 51, 234, 0.85);
+  }
+  
+  /* Smooth animations */
+  .tab-trigger, .dashboard-card, .visualization-placeholder {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .tabs-nav {
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(3, auto);
+      gap: 10px;
+    }
+    
+    .dashboard-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .panel-content {
+      padding: 20px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .tabs-nav {
+      grid-template-columns: 1fr;
+    }
+    
+    .analytics-container {
+      padding: 16px;
+    }
+    
+    .tabs-content-container {
+      padding: 12px;
+    }
+    
+    .tab-panel {
+      padding: 12px;
+    }
+  }
