@@ -1,73 +1,231 @@
-/* Dashboard.css */
-
-body {
+/* General Styles */
+.dashboard {
     font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #5d5dde;
-    color: #333;
-}
-
-.dashboard-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     padding: 20px;
+    background: #eef2f7;
+    min-height: 100vh;
 }
 
+/* Header */
 .header {
-    width: 100%;
-    background-color: #4CAF50;
-    color: white;
-    padding: 15px 20px;
     text-align: center;
-    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 26px;
+    color: #2c3e50;
     font-weight: bold;
 }
 
+/* Cards Section */
+.cards {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
 .card {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin: 20px;
+    background: white;
     padding: 20px;
-    width: 90%;
-    max-width: 400px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
     text-align: center;
+    flex: 1;
+    max-width: 280px;
+    min-width: 200px;
 }
 
-.card h3 {
-    margin: 0 0 10px;
-    font-size: 20px;
-    color: #4CAF50;
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
 
-.card p {
-    margin: 0;
-    font-size: 16px;
-    color: #666;
+.card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
 }
 
-.button {
-    display: inline-block;
-    padding: 10px 20px;
-    margin-top: 15px;
-    background-color: #4CAF50;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
+/* Different Colors for Each Card */
+.card:nth-child(1) {
+    background: #e3fcef;
+    border-left: 6px solid #27ae60;
 }
 
-.button:hover {
-    background-color: #45a049;
+.card:nth-child(2) {
+    background: #e7eff6;
+    border-left: 6px solid #2980b9;
 }
 
-.footer {
-    margin-top: auto;
-    padding: 10px;
-    text-align: center;
+.card:nth-child(3) {
+    background: #fef3e3;
+    border-left: 6px solid #e67e22;
+}
+
+/* Value & Info Styles */
+.value {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 8px 0;
+    color: #2c3e50;
+}
+
+.info {
     font-size: 14px;
-    color: #999;
+    color: #7f8c8d;
+}
+
+/* Charts Section */
+.charts {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.chart-container {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    flex: 1;
+    min-width: 320px;
+    text-align: center;
+}
+
+/* Bar Chart */
+.bar-chart {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    justify-content: center;
+    height: 200px;
+    margin-top: 10px;
+}
+
+.bar {
+    width: 30px;
+    background: #2980b9;
+    border-radius: 6px;
+    position: relative;
+    transition: 0.3s;
+}
+
+.bar:hover {
+    opacity: 0.85;
+    transform: scaleY(1.1);
+}
+
+.bar-label {
+    position: absolute;
+    bottom: -22px;
+    font-size: 12px;
+    color: #2c3e50;
+    text-align: center;
+    width: 100%;
+}
+
+.tooltip {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: black;
+    color: white;
+    padding: 6px 10px;
+    font-size: 10px;
+    border-radius: 4px;
+    display: none;
+}
+
+.bar:hover .tooltip {
+    display: block;
+}
+
+/* Emissions Table */
+.emissions-table {
+    margin-top: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    overflow-x: auto;
+}
+
+.emissions-table h3 {
+    font-size: 18px;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+}
+
+.emissions-table h3::before {
+    content: "♻️";
+    font-size: 18px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+th {
+    background: #f8f9fa;
+    color: #34495e;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background: #fafafa;
+}
+
+tr:hover {
+    background: #f0f5fa;
+    transition: 0.3s;
+}
+
+td:nth-child(4) {
+    font-weight: bold;
+    color: #27ae60;
+}
+
+td:nth-child(5) {
+    color: #555;
+    font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .charts {
+        flex-direction: column;
+    }
+
+    .card {
+        max-width: 90%;
+    }
+
+    th, td {
+        font-size: 12px;
+        padding: 10px;
+    }
 }
