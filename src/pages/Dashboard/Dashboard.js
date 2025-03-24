@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from "@mui/material";
-import { Eco, Bolt, Recycling, LocalShipping, Warehouse, Inventory, Business, Build } from "@mui/icons-material";
+import {  Bolt, Recycling, LocalShipping, Warehouse, Inventory, Business, Build } from "@mui/icons-material";
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
