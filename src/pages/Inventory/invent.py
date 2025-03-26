@@ -11,7 +11,7 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all origins
 
 # Configuration for data file (update this if needed)
-DATA_FILE = 'sample_demand_data.csv'  # Or 'your_demand_data.csv'
+DATA_FILE = 'sample_demand_data.csv'  
 
 # Initialize model and label encoders
 model = None

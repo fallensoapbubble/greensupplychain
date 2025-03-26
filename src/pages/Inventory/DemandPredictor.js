@@ -14,9 +14,13 @@ const DemandPredictor = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    // Generate options for dropdowns
+    const productIdOptions = Array.from({length: 5}, (_, i) => `P${101 + i}`);
+    const plantCodeOptions = Array.from({length: 5}, (_, i) => `PL${i + 1}`);
+    const customerOptions = Array.from({length: 5}, (_, i) => `CUST${String(i + 1).padStart(3, '0')}`);
+
     const styles = {
         container: {
-            
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -48,18 +52,12 @@ const DemandPredictor = () => {
             color: '#374151',
             marginBottom: '0.25rem'
         },
-        input: {
+        select: {
             width: '100%',
             padding: '0.5rem 0.75rem',
             backgroundColor: 'rgba(249, 250, 251, 0.5)',
             border: '1px solid rgba(209, 213, 219, 0.5)',
-            borderRadius: '0.375rem',
-            transition: 'all 0.3s ease-in-out',
-            outline: 'none'
-        },
-        inputFocus: {
-            boxShadow: '0 0 0 2px rgba(59, 130, 246, 0.5)',
-            borderColor: 'rgba(59, 130, 246, 0.5)'
+            borderRadius: '0.375rem'
         },
         button: {
             width: '100%',
@@ -74,9 +72,6 @@ const DemandPredictor = () => {
         buttonDisabled: {
             opacity: 0.5,
             cursor: 'not-allowed'
-        },
-        buttonHover: {
-            backgroundColor: 'rgba(37, 99, 235, 0.8)'
         },
         errorMessage: {
             marginTop: '1rem',
@@ -107,9 +102,10 @@ const DemandPredictor = () => {
     };
 
     const handleChange = (e) => {
+        const { name, value } = e.target;
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
+            [name]: value
         });
     };
 
@@ -133,35 +129,123 @@ const DemandPredictor = () => {
             <div style={styles.card}>
                 <h2 style={styles.title}>Demand Prediction</h2>
                 <form onSubmit={handleSubmit}>
-                    {Object.keys(formData).map((key) => (
-                        <div key={key} style={styles.formGroup}>
-                            <label style={styles.label}>{key.replace('_', ' ')}</label>
-                            <input
-                                type={
-                                    key === 'Rolling_7day_demand' || key === 'Rolling_30day_demand' ? 'number' :
-                                    key === 'Order Date' ? 'date' : 'text'
-                                }
-                                name={key}
-                                value={formData[key]}
-                                onChange={handleChange}
-                                required
-                                style={{
-                                    ...styles.input,
-                                    ':focus': styles.inputFocus
-                                }}
-                                min={key.includes('Rolling') ? "0" : undefined}
-                                step={key.includes('Rolling') ? "0.01" : undefined}
-                            />
-                        </div>
-                    ))}
+                    {/* Dropdown for Product ID */}
+                    <div style={styles.formGroup}>
+                        <label style={styles.label}>Product ID</label>
+                        <select
+                            name="Product ID"
+                            value={formData['Product ID']}
+                            onChange={handleChange}
+                            required
+                            style={styles.select}
+                        >
+                            <option value="">Select Product ID</option>
+                            {productIdOptions.map(id => (
+                                <option key={id} value={id}>{id}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Dropdown for Plant Code */}
+                    <div style={styles.formGroup}>
+                        <label style={styles.label}>Plant Code</label>
+                        <select
+                            name="Plant Code"
+                            value={formData['Plant Code']}
+                            onChange={handleChange}
+                            required
+                            style={styles.select}
+                        >
+                            <option value="">Select Plant Code</option>
+                            {plantCodeOptions.map(code => (
+                                <option key={code} value={code}>{code}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Dropdown for Customer */}
+                    <div style={styles.formGroup}>
+                        <label style={styles.label}>Customer</label>
+                        <select
+                            name="Customer"
+                            value={formData['Customer']}
+                            onChange={handleChange}
+                            required
+                            style={styles.select}
+                        >
+                            <option value="">Select Customer</option>
+                            {customerOptions.map(custId => (
+                                <option key={custId} value={custId}>{custId}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Date input */}
+                    <div style={styles.formGroup}>
+                        <label style={styles.label}>Order Date</label>
+                        <input
+                            type="date"
+                            name="Order Date"
+                            value={formData['Order Date']}
+                            onChange={handleChange}
+                            required
+                            style={{
+                                width: '100%',
+                                padding: '0.5rem 0.75rem',
+                                backgroundColor: 'rgba(249, 250, 251, 0.5)',
+                                border: '1px solid rgba(209, 213, 219, 0.5)',
+                                borderRadius: '0.375rem'
+                            }}
+                        />
+                    </div>
+
+                    {/* Number inputs for Rolling demands */}
+                    <div style={styles.formGroup}>
+                        <label style={styles.label}>Rolling 7-day Demand</label>
+                        <input
+                            type="number"
+                            name="Rolling_7day_demand"
+                            value={formData['Rolling_7day_demand']}
+                            onChange={handleChange}
+                            required
+                            min="0"
+                            step="0.01"
+                            style={{
+                                width: '100%',
+                                padding: '0.5rem 0.75rem',
+                                backgroundColor: 'rgba(249, 250, 251, 0.5)',
+                                border: '1px solid rgba(209, 213, 219, 0.5)',
+                                borderRadius: '0.375rem'
+                            }}
+                        />
+                    </div>
+
+                    <div style={styles.formGroup}>
+                        <label style={styles.label}>Rolling 30-day Demand</label>
+                        <input
+                            type="number"
+                            name="Rolling_30day_demand"
+                            value={formData['Rolling_30day_demand']}
+                            onChange={handleChange}
+                            required
+                            min="0"
+                            step="0.01"
+                            style={{
+                                width: '100%',
+                                padding: '0.5rem 0.75rem',
+                                backgroundColor: 'rgba(249, 250, 251, 0.5)',
+                                border: '1px solid rgba(209, 213, 219, 0.5)',
+                                borderRadius: '0.375rem'
+                            }}
+                        />
+                    </div>
                     
                     <button 
                         type="submit" 
                         disabled={loading}
                         style={{
                             ...styles.button,
-                            ...(loading ? styles.buttonDisabled : {}),
-                            ':hover': styles.buttonHover
+                            ...(loading ? styles.buttonDisabled : {})
                         }}
                     >
                         {loading ? 'Predicting...' : 'Predict Demand'}

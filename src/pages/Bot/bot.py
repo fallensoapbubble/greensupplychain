@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
 # Configure the Gemini API
-genai.configure(api_key="AIzaSyD6W_zETAqKHMXe25YikF1doGw-zueB0AM")
+genai.configure(api_key="AIzaSyD9_ES9XMSaVAxYBktLS-vWKN1emJb-nRU")
 def generate_text(model_name="gemini-2.0-flash-001", prompt="Welcome message"):
     try:
         model = genai.GenerativeModel(model_name)
