@@ -5,11 +5,12 @@ const Route = () => {
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
-  const backendURL = "https://demand-production.up.railway.app";
+  const [routeSummaries, setRouteSummaries] = useState([]);
+  const backendURL = "https://demand-production.up.railway.app"; // Replace with your own backend URL if needed
 
   useEffect(() => {
     const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCrTX-gRHbf-ZQ_k5Ji61IqrQENwJ7RUfA&libraries=places,geometry&callback=initMap`;
+    script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCrTX-gRHbf-ZQ_k5Ji61IqrQENwJ7RUfA&libraries=places,geometry&callback=initMap";
     script.async = true;
     script.defer = true;
     window.initMap = initMap;
@@ -18,21 +19,17 @@ const Route = () => {
 
   const initMap = () => {
     const map = new window.google.maps.Map(mapRef.current, {
-      center: { lat: 19.0760, lng: 72.8777 },
+      center: { lat: 19.076, lng: 72.8777 },
       zoom: 10,
     });
 
-    const autocompleteOrigin = new window.google.maps.places.Autocomplete(
-      document.getElementById("origin")
-    );
-    const autocompleteDestination = new window.google.maps.places.Autocomplete(
-      document.getElementById("destination")
-    );
+    new window.google.maps.places.Autocomplete(document.getElementById("origin"));
+    new window.google.maps.places.Autocomplete(document.getElementById("destination"));
   };
 
   const findRoute = () => {
     if (!origin || !destination) {
-      setStatusMessage("❌ Please enter both origin and destinations.");
+      setStatusMessage("❌ Please enter both origin and destination.");
       return;
     }
 
@@ -45,10 +42,9 @@ const Route = () => {
 
   const getCoordinates = (address, callback) => {
     const geocoder = new window.google.maps.Geocoder();
-    geocoder.geocode({ address }, function (results, status) {
+    geocoder.geocode({ address }, (results, status) => {
       if (status === "OK" && results.length > 0) {
-        const location = results[0].geometry.location;
-        callback(location);
+        callback(results[0].geometry.location);
       } else {
         alert(`❌ Geocode failed for ${address}: ${status}`);
       }
@@ -80,69 +76,78 @@ const Route = () => {
           setStatusMessage("❌ No alternative routes available.");
         }
       })
-      .catch((err) => console.error("❌ Error fetching routes:", err));
+      .catch((err) => {
+        console.error("❌ Error fetching routes:", err);
+        setStatusMessage("❌ Failed to fetch routes.");
+      });
   };
 
   const processRoutes = (routes) => {
-    setStatusMessage("✅ Routes retrieved successfully!");
-    let bestRoute = null;
-    let bestScore = Infinity;
-
-    routes.forEach((routeData, index) => {
-      let totalDistance = 0;
-      let totalDuration = 0;
-      let summary = "";
-      const polyline = routeData.polyline.encodedPolyline;
-
-      routeData.legs.forEach((leg) => {
-        const distance = leg.distanceMeters || 0;
-        const duration =
-          leg.staticDuration
-            ? parseInt(leg.staticDuration.match(/\d+/)[0]) || 0
-            : leg.duration?.value || 0;
-        totalDistance += distance;
-        totalDuration += duration;
-        summary += `Leg: ${leg.start_address} to ${leg.end_address} - Distance: ${distance}, Duration: ${duration}\n`;
-      });
-
-      const carbon = ((totalDistance / 1000) * 0.2).toFixed(2);
-      const score = totalDistance * 0.3 + totalDuration * 0.4 + carbon * 0.3;
-
-      if (score < bestScore) {
-        bestScore = score;
-        bestRoute = {
-          routeIndex: index + 1,
-          totalDistance,
-          totalDuration,
-          polyline,
-          carbon,
-          summary,
-        };
-      }
+    const map = new window.google.maps.Map(mapRef.current, {
+      center: { lat: 19.076, lng: 72.8777 },
+      zoom: 11,
     });
 
-    if (bestRoute) {
-      const path = window.google.maps.geometry.encoding.decodePath(bestRoute.polyline);
-      const map = new window.google.maps.Map(mapRef.current, {
-        center: path[0],
-        zoom: 13,
+    let bestRoute = null;
+    let bestScore = Infinity;
+    const summaries = [];
+
+    routes.forEach((routeData, index) => {
+      const polyline = routeData.polyline.encodedPolyline;
+      const path = window.google.maps.geometry.encoding.decodePath(polyline);
+
+      let totalDistance = 0;
+      let totalDuration = 0;
+      let legSummary = "";
+
+      routeData.legs.forEach((leg, i) => {
+        const distance = leg.distanceMeters || 0;
+        const duration = leg.staticDuration
+          ? parseInt(leg.staticDuration.match(/\d+/)[0]) || 0
+          : leg.duration?.value || 0;
+
+        totalDistance += distance;
+        totalDuration += duration;
+        legSummary += `-> ${leg.start_address} to ${leg.end_address} | Distance: ${distance}m | Duration: ${duration}s\n`;
       });
+
+      const carbon = ((totalDistance / 1000) * 0.2).toFixed(2); // in kg CO2
+      const score = totalDistance * 0.3 + totalDuration * 0.4 + carbon * 0.3;
+      const isBest = score < bestScore;
+
+      if (isBest) {
+        bestScore = score;
+        bestRoute = { path };
+      }
+
+      summaries.push({
+        index: index + 1,
+        totalDistance,
+        totalDuration,
+        carbon,
+        summary: legSummary,
+        polyline,
+        simulatedAQI: Math.floor(Math.random() * 100) + 50, // Just for simulation
+      });
+
       new window.google.maps.Polyline({
         path,
         geodesic: true,
-        strokeColor: "#FF0000",
+        strokeColor: isBest ? "#FF0000" : "#888",
         strokeOpacity: 1.0,
-        strokeWeight: 3,
+        strokeWeight: 4,
         map,
       });
+    });
 
-      setStatusMessage(`✅ Optimal Route Found!\nDistance: ${bestRoute.totalDistance}m, Duration: ${bestRoute.totalDuration}s, Carbon: ${bestRoute.carbon}kg CO2`);
-    }
+    setRouteSummaries(summaries);
+    setStatusMessage("✅ All routes displayed with directions. Optimal one highlighted in red.");
   };
 
   return (
     <div style={{ fontFamily: "Roboto, sans-serif", padding: 20, backgroundColor: "#f4f4f9" }}>
       <h1 style={{ textAlign: "center" }}>Sustainable Route Optimizer</h1>
+
       <div style={{ marginBottom: 20 }}>
         <input
           id="origin"
@@ -162,12 +167,48 @@ const Route = () => {
         />
         <button
           onClick={findRoute}
-          style={{ padding: 10, width: "100%", fontSize: 16, backgroundColor: "#4CAF50", color: "white", border: "none", cursor: "pointer" }}
+          style={{
+            padding: 10,
+            width: "100%",
+            fontSize: 16,
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            cursor: "pointer",
+          }}
         >
           Find Route
         </button>
         <p style={{ color: "#444", marginTop: 10 }}>{statusMessage}</p>
       </div>
+
+      {routeSummaries.length > 0 && (
+        <div style={{ marginBottom: 20 }}>
+          <h3>Available Routes:</h3>
+          <p style={{ fontStyle: "italic", color: "#999" }}>
+            * AQI values are randomly changing for simulation purposes.
+          </p>
+          {routeSummaries.map((route) => (
+            <div
+              key={route.index}
+              style={{
+                backgroundColor: "#fff",
+                border: "1px solid #ccc",
+                padding: 10,
+                marginBottom: 10,
+                borderRadius: 8,
+              }}
+            >
+              <strong>Route {route.index}</strong>
+              <pre style={{ whiteSpace: "pre-wrap", fontSize: 14 }}>
+                {route.summary}
+                🚗 Distance: {route.totalDistance}m | ⏱ Duration: {route.totalDuration}s | 🌿 Carbon: {route.carbon} kg CO₂ | 🌀 Simulated AQI: {route.simulatedAQI}
+              </pre>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div ref={mapRef} style={{ height: 500, width: "100%", border: "1px solid #ccc" }}></div>
     </div>
   );
