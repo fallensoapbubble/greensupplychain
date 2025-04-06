@@ -32,7 +32,7 @@ const Route = () => {
 
   const findRoute = () => {
     if (!origin || !destination) {
-      setStatusMessage("❌ Please enter both origin and destination.");
+      setStatusMessage("❌ Please enter both origin and destinations.");
       return;
     }
 
