@@ -64,7 +64,8 @@ const Chatbot = () => {
             flexDirection: 'column',
             background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
             borderRadius: '10px',
-            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)'
+            boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
+            marginBottom: '20px'
         }}>
             <div style={{
                 textAlign: 'center',
@@ -79,7 +80,7 @@ const Chatbot = () => {
                     color: '#2d3748',
                     fontSize: '28px',
                     fontWeight: '600',
-                    background: 'linear-gradient(90deg, #6366f1, #8b5cf6)',
+                    background: 'linear-gradient(90deg,rgb(99, 241, 137),rgb(156, 246, 92))',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent'
                 }}>
@@ -133,12 +134,12 @@ const Chatbot = () => {
                                 padding: '12px 18px',
                                 borderRadius: message.type === 'user' ? '18px 18px 0 18px' : '18px 18px 18px 0',
                                 backgroundColor: message.type === 'user' 
-                                    ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' 
+                                    ? 'linear-gradient(135deg,rgb(99, 241, 116),rgb(42, 169, 99))' 
                                     : message.type === 'error' 
                                         ? '#FED7D7' 
                                         : '#F0FFF4',
                                 background: message.type === 'user' 
-                                    ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' 
+                                    ? 'linear-gradient(135deg,rgb(60, 169, 98),rgb(44, 147, 68))' 
                                     : message.type === 'error' 
                                         ? '#FED7D7' 
                                         : 'white',
@@ -187,7 +188,7 @@ const Chatbot = () => {
                         border: 'none',
                         background: isLoading 
                             ? '#A0AEC0' 
-                            : 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+                            : 'linear-gradient(135deg,rgb(99, 241, 109),rgb(56, 189, 103))',
                         borderRadius: '50%',
                         display: 'flex',
                         justifyContent: 'center',
