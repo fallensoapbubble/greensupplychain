@@ -8,6 +8,7 @@ const Route = () => {
   const [destination, setDestination] = useState("");
   const [statusMessage, setStatusMessage] = useState("");
   const [routeSummaries, setRouteSummaries] = useState([]);
+  const [optimalRoute, setOptimalRoute] = useState(null);
   const backendURL = "https://demand-production.up.railway.app"; // Your existing backend URL
 
   useEffect(() => {
@@ -73,6 +74,8 @@ const Route = () => {
   };
 
   const fetchRoutes = (originCoords, destinationCoords) => {
+    setStatusMessage("🔍 Fetching routes...");
+    
     const requestBody = {
       origin: {
         latitude: originCoords.lat(),
@@ -91,8 +94,9 @@ const Route = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.success && data.routes.length > 0) {
+        if (data.success && data.routes && data.routes.length > 0) {
           processRoutes(data.routes);
+          setStatusMessage("✅ Routes retrieved successfully!");
         } else {
           setStatusMessage("❌ No alternative routes available.");
         }
@@ -101,6 +105,22 @@ const Route = () => {
         console.error("❌ Error fetching routes:", err);
         setStatusMessage("❌ Failed to fetch routes.");
       });
+  };
+
+  const getSustainabilityMetrics = (distance) => {
+    // Simplified carbon footprint calculation
+    const carbonFootprint = (distance / 1000) * 0.2;
+    return {
+      carbonFootprint: carbonFootprint.toFixed(2)
+    };
+  };
+
+  const calculateRouteScore = (distance, duration, carbonFootprint) => {
+    const distanceWeight = 0.3;
+    const durationWeight = 0.4;
+    const carbonFootprintWeight = 0.3;
+
+    return (distance * distanceWeight) + (duration * durationWeight) + (parseFloat(carbonFootprint) * carbonFootprintWeight);
   };
 
   const processRoutes = (routes) => {
@@ -114,41 +134,66 @@ const Route = () => {
     const summaries = [];
 
     routes.forEach((routeData, index) => {
+      if (!routeData.polyline || !routeData.polyline.encodedPolyline) {
+        console.error(`⚠ Route ${index + 1} has no polyline.`);
+        return;
+      }
+
       const polyline = routeData.polyline.encodedPolyline;
       const path = window.google.maps.geometry.encoding.decodePath(polyline);
 
       let totalDistance = 0;
       let totalDuration = 0;
-      let legSummary = "";
+      let routeSummary = "";
 
       if (routeData.legs && routeData.legs.length > 0) {
-        routeData.legs.forEach((leg, i) => {
-          const distance = leg.distanceMeters || 0;
-          const duration = leg.staticDuration
-            ? parseInt(leg.staticDuration.match(/\d+/)[0]) || 0
-            : leg.duration?.value || 0;
+        routeData.legs.forEach((leg, legIndex) => {
+          const distance = leg.distanceMeters || (leg.distance && leg.distance.value) || 0;
+          const duration = leg.staticDuration 
+            ? parseInt(leg.staticDuration.match(/\d+/)[0]) || 0 
+            : (leg.duration && leg.duration.value) || 0;
 
           totalDistance += distance;
           totalDuration += duration;
-          legSummary += `-> ${leg.start_address || 'Start'} to ${leg.end_address || 'End'} | Distance: ${distance}m | Duration: ${duration}s\n`;
+
+          routeSummary += `Leg: ${leg.start_address || 'Start'} to ${leg.end_address || 'End'} - Distance: ${distance} meters, Duration: ${duration} seconds.\n`;
+          
+          // Add step-by-step instructions if available
+          if (leg.steps && leg.steps.length > 0) {
+            leg.steps.forEach((step, stepIndex) => {
+              if (step.navigationInstruction) {
+                const maneuver = step.navigationInstruction.maneuver || '';
+                let instructions = step.navigationInstruction.instructions || '';
+                instructions = instructions.replace(/[^a-zA-Z0-9\s-]/g, '');
+                
+                routeSummary += `Step ${stepIndex + 1}: Maneuver: ${maneuver}, Instruction: ${instructions}\n`;
+              }
+            });
+          }
         });
       }
 
-      const carbon = ((totalDistance / 1000) * 0.2).toFixed(2); // in kg CO2
-      const score = totalDistance * 0.3 + totalDuration * 0.4 + carbon * 0.3;
-      const isBest = score < bestScore;
+      const sustainabilityMetrics = getSustainabilityMetrics(totalDistance);
+      const routeScore = calculateRouteScore(totalDistance, totalDuration, sustainabilityMetrics.carbonFootprint);
+      const isBest = routeScore < bestScore;
 
       if (isBest) {
-        bestScore = score;
-        bestRoute = { path };
+        bestScore = routeScore;
+        bestRoute = {
+          index: index + 1,
+          totalDistance,
+          totalDuration,
+          carbonFootprint: sustainabilityMetrics.carbonFootprint,
+          polyline
+        };
       }
 
       summaries.push({
         index: index + 1,
         totalDistance,
         totalDuration,
-        carbon,
-        summary: legSummary,
+        carbonFootprint: sustainabilityMetrics.carbonFootprint,
+        summary: routeSummary,
         polyline,
         simulatedAQI: Math.floor(Math.random() * 100) + 50, // Just for simulation
       });
@@ -158,13 +203,14 @@ const Route = () => {
         geodesic: true,
         strokeColor: isBest ? "#FF0000" : "#888",
         strokeOpacity: 1.0,
-        strokeWeight: 4,
+        strokeWeight: isBest ? 4 : 2,
         map,
       });
     });
 
     setRouteSummaries(summaries);
-    setStatusMessage("✅ All routes displayed with directions. Optimal one highlighted in red.");
+    setOptimalRoute(bestRoute);
+    setStatusMessage("✅ All routes displayed with directions. Optimal route highlighted in red.");
   };
 
   return (
@@ -176,7 +222,7 @@ const Route = () => {
           id="origin"
           ref={originInputRef}
           type="text"
-          placeholder="Enter origin"
+          placeholder="Enter origin location"
           value={origin}
           onChange={(e) => setOrigin(e.target.value)}
           style={{ padding: 10, width: "100%", fontSize: 16, marginBottom: 10 }}
@@ -185,7 +231,7 @@ const Route = () => {
           id="destination"
           ref={destinationInputRef}
           type="text"
-          placeholder="Enter destination"
+          placeholder="Enter destination location"
           value={destination}
           onChange={(e) => setDestination(e.target.value)}
           style={{ padding: 10, width: "100%", fontSize: 16, marginBottom: 10 }}
@@ -207,34 +253,62 @@ const Route = () => {
         <p style={{ color: "#444", marginTop: 10 }}>{statusMessage}</p>
       </div>
 
+      {optimalRoute && (
+        <div style={{ marginBottom: 20, padding: 15, backgroundColor: "#e8f5e9", borderRadius: 8, border: "1px solid #c8e6c9" }}>
+          <h3 style={{ color: "#2e7d32", marginTop: 0 }}>Optimal Route Metrics</h3>
+          <p><strong>Total Distance:</strong> {optimalRoute.totalDistance} meters</p>
+          <p><strong>Total Duration:</strong> {optimalRoute.totalDuration} seconds</p>
+          <p><strong>Carbon Footprint:</strong> {optimalRoute.carbonFootprint} kg CO₂</p>
+        </div>
+      )}
+
       {routeSummaries.length > 0 && (
         <div style={{ marginBottom: 20 }}>
-          <h3>Available Routes:</h3>
-          <p style={{ fontStyle: "italic", color: "#999" }}>
-            * AQI values are randomly changing for simulation purposes.
+          <h3>Route Summaries:</h3>
+          <p style={{ fontStyle: "italic", color: "#666" }}>
+            * AQI values are randomly generated for simulation purposes.
           </p>
           {routeSummaries.map((route) => (
             <div
               key={route.index}
               style={{
-                backgroundColor: "#fff",
-                border: "1px solid #ccc",
-                padding: 10,
-                marginBottom: 10,
+                backgroundColor: route.index === optimalRoute?.index ? "#e8f5e9" : "#fff",
+                border: `1px solid ${route.index === optimalRoute?.index ? "#c8e6c9" : "#ddd"}`,
                 borderRadius: 8,
+                padding: 15,
+                marginBottom: 15,
               }}
             >
-              <strong>Route {route.index}</strong>
-              <pre style={{ whiteSpace: "pre-wrap", fontSize: 14 }}>
-                {route.summary}
-                🚗 Distance: {route.totalDistance}m | ⏱ Duration: {route.totalDuration}s | 🌿 Carbon: {route.carbon} kg CO₂ | 🌀 Simulated AQI: {route.simulatedAQI}
-              </pre>
+              <h3 style={{ margin: "0 0 10px 0", color: route.index === optimalRoute?.index ? "#2e7d32" : "#333" }}>
+                {route.index === optimalRoute?.index ? "Optimal Route" : `Route ${route.index}`}
+              </h3>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", marginBottom: 10 }}>
+                <span>🚗 Distance: {route.totalDistance}m</span>
+                <span>⏱ Duration: {route.totalDuration}s</span>
+                <span>🌿 Carbon: {route.carbonFootprint} kg CO₂</span>
+                <span>🌀 Simulated AQI: {route.simulatedAQI}</span>
+              </div>
+              <div className="route-summary">
+                <pre style={{ 
+                  whiteSpace: "pre-wrap", 
+                  fontFamily: "Courier New, monospace", 
+                  fontSize: 14, 
+                  backgroundColor: "#f5f5f5", 
+                  padding: 10, 
+                  borderRadius: 4, 
+                  border: "1px solid #eee", 
+                  overflow: "auto",
+                  maxHeight: "250px"
+                }}>
+                  {route.summary}
+                </pre>
+              </div>
             </div>
           ))}
         </div>
       )}
 
-      <div ref={mapRef} style={{ height: 500, width: "100%", border: "1px solid #ccc" }}></div>
+      <div ref={mapRef} style={{ height: 500, width: "100%", border: "1px solid #ccc", borderRadius: 4 }}></div>
     </div>
   );
 };
