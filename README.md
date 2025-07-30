@@ -1,15 +1,65 @@
 
 
-### `npm start`
+# 🌿 Green Supply Chain Logistics AI
 
-Runs the app in the development mode. Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+An intelligent and eco-aware logistics platform powered by **MERN** and **Flask**. This full-stack application uses AI-driven insights to optimize supply chain routes, reduce carbon emissions, and improve operational efficiency—all while supporting sustainability goals.
 
-The page will reload when you make changes. You may also see any lint errors in the console.
+## 🚚 Features
+- ♻️ AI-powered logistics and route optimization
+- 🔍 Emissions tracking with predictive analytics
+- 🧠 Machine learning models served via Flask APIs
+- 🔐 Secure login and role-based access management
+- 📊 Real-time dashboard for supply chain monitoring
 
-### `npm test`
+---
 
-### `npm run build`
+## 🛠️ Project Setup
 
-Builds the app for production to the `build` folder.
+### 🔮 Frontend
 
-It correctly bundles React in production mode and optimizes the build for the best performance. The build is minified and the filenames include the hashes.
+**Tech Stack**: React, TailwindCSS, Redux, Axios
+
+**Setup**:
+```bash
+cd frontend
+npm install
+npm start
+```
+
+Visit [http://localhost:3000](http://localhost:3000) to launch the app in development mode.
+
+
+---
+
+### 🧪 Flask Services
+
+**Service 1: AI Model Server**
+
+Serves ML models for route optimization and sustainability scoring.
+
+
+**Service 2: Emission Analytics API**
+
+Handles carbon footprint calculation and analytics.
+
+**Setup**:
+```bash
+cd flask/emissions-api
+pip install -r requirements.txt
+python app.py
+```
+
+Both Flask servers should run concurrently alongside the MERN stack.
+
+---
+
+## 📦 Build
+
+To create a production-ready React build:
+```bash
+npm run build
+```
+This outputs the minified build files to the `build/` folder.
+
+
+
